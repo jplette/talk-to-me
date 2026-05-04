@@ -18,3 +18,9 @@ export const LOCKOUT = {
   WINDOW_MS: 10 * 60 * 1000,
   BLOCK_MS: 60 * 1000,
 } as const;
+
+export const WEBHOOK = {
+  // Tolerated drift between webhook timestamp and server clock.
+  // ElevenLabs default: signed timestamps are recent. 5min covers clock skew + retries.
+  SIGNATURE_TOLERANCE_SECONDS: 5 * 60,
+} as const;
