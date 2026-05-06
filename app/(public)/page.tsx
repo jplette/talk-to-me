@@ -1,21 +1,31 @@
 // app/(public)/page.tsx
+'use client';
+
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useT } from '@/lib/i18n/provider';
 
 export default function LandingPage() {
+  const { t } = useT();
+  const headline = t('landing.headline');
+
   return (
-    <main className="mx-auto max-w-2xl px-6 py-24">
-      <h1 className="text-3xl font-medium">Talk to me.</h1>
-      <p className="mt-4 text-neutral-600">
-        Ein digitaler Twin von Jonathan Plettenberg. Auf 4 Minuten begrenzt.
-        Spricht über CV, Projekte, Tech-Stack, Arbeitsweise, Hobbys. Sonst
-        nichts.
-      </p>
-      <Link
-        href="/lounge"
-        className="mt-8 inline-block rounded bg-black px-4 py-2 text-white"
+    <section className="mx-auto flex w-full max-w-[560px] flex-col items-start gap-6 px-6 py-16 md:py-[25vh]">
+      <h1
+        className="text-[36px] font-extrabold tracking-[-0.04em] leading-[1.1] text-foreground md:text-5xl lg:text-[56px] whitespace-pre-line"
       >
-        Gespräch starten
-      </Link>
-    </main>
+        {headline}
+      </h1>
+      <p className="text-lg leading-snug text-muted-foreground max-w-[40ch]">
+        {t('landing.lede')}
+      </p>
+      <Button asChild size="lg" className="w-full md:w-auto">
+        <Link href="/login">
+          {t('landing.login_cta')}
+          <ArrowRight className="ml-1 h-4 w-4" strokeWidth={1.5} />
+        </Link>
+      </Button>
+    </section>
   );
 }
