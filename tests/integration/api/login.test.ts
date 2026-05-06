@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
 import { POST } from '@/app/api/auth/login/route';
 import { resetLockout } from '@/lib/auth/lockout';
