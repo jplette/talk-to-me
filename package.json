@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "brand:assets": "tsx scripts/generate-brand-assets.ts",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
