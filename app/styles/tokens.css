@@ -1,0 +1,57 @@
+/* app/styles/tokens.css — Jakumba Design System foundation (light tokens). */
+
+:root {
+  /* Ink + canvas */
+  --jk-ink:        #2D3142;
+  --jk-ink-90:    #41475A;
+  --jk-ink-70:    #60646C;
+  --jk-ink-40:    #B0B4BA;
+  --jk-ink-20:    #D5D7DC;
+  --jk-ink-15:    #E0E1E6;
+  --jk-ink-05:    #F4F4F6;
+  --jk-canvas:    #F0F0F3;
+  --jk-canvas-2:  #E7E7EB;
+  --jk-paper:     #FFFFFF;
+  --fg-on-ink:    #F7F3EE;
+
+  /* Accent */
+  --jk-flame:     #EF8354;
+  --fg-on-flame:  #FFFFFF;
+
+  /* Semantic */
+  --warn: #AB6400;
+  --err:  #C03A2B;
+  --ok:   #2F7D5B;
+
+  /* Type */
+  --font-sans: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Spacing scale (8px base) */
+  --sp-1: 4px;  --sp-2: 8px;   --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px;  --sp-7: 40px; --sp-8: 48px;
+  --sp-9: 64px; --sp-10: 80px; --sp-11: 96px; --sp-12: 144px;
+
+  /* Radii */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+  --r-2xl: 32px;
+  --r-pill: 9999px;
+
+  /* Shadows — whisper philosophy */
+  --sh-0: 0 0 0 1px rgba(45,49,66,0.06);
+  --sh-1: 0 1px 2px rgba(45,49,66,0.04), 0 0 0 1px rgba(45,49,66,0.06);
+  --sh-2: 0 2px 6px rgba(45,49,66,0.06), 0 1px 2px rgba(45,49,66,0.05);
+  --sh-3: 0 8px 24px rgba(45,49,66,0.08), 0 2px 6px rgba(45,49,66,0.06);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --d-1: 120ms;
+  --d-2: 200ms;
+  --d-3: 320ms;
+  --d-4: 520ms;
+}
