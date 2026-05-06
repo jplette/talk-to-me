@@ -1,6 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import { ConversationProvider } from '@elevenlabs/react';
+import { AppHeader } from '@/components/AppHeader';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { LoungeShell } from '@/components/lounge/LoungeShell';
 import { IdlePreStart } from '@/components/lounge/IdlePreStart';
 import { StatusLine } from '@/components/lounge/StatusLine';
@@ -27,6 +38,9 @@ function LoungeInner() {
   const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID!;
   const conv = useElevenLabsConversation({ agentId, uiLang: lang });
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingNav, setPendingNav] = useState<(() => void) | null>(null);
+
   const isActive =
     conv.state.name === 'active' ||
     conv.state.name === 'warning' ||
@@ -34,6 +48,13 @@ function LoungeInner() {
   const agentSpeaking =
     (conv.state.name === 'active' || conv.state.name === 'warning') &&
     conv.state.sub === 'speaking';
+
+  const wordmarkGuard = isActive
+    ? (proceed: () => void) => {
+        setPendingNav(() => proceed);
+        setConfirmOpen(true);
+      }
+    : undefined;
 
   const timer = useSessionTimer({
     running: isActive,
@@ -90,50 +111,65 @@ function LoungeInner() {
       break;
   }
 
-  if (conv.state.name === 'error-mic') {
-    return (
-      <LoungeShell>
-        <MicPermissionRecovery />
-      </LoungeShell>
-    );
-  }
-  if (conv.state.name === 'error-connect') {
-    return (
-      <LoungeShell>
-        <ConnectFailRecovery onRetry={conv.start} />
-      </LoungeShell>
-    );
-  }
-  if (conv.state.name === 'ended') {
-    return (
-      <LoungeShell>
-        <EndedView turns={conv.turns} onNewSession={() => location.reload()} />
-      </LoungeShell>
-    );
-  }
-  if (conv.state.name === 'idle') {
-    return (
-      <LoungeShell>
-        <IdlePreStart onStart={conv.start} />
-        <StatusLine text={t('lounge.status_idle')} variant="idle" />
-      </LoungeShell>
-    );
-  }
-
   return (
-    <LoungeShell>
-      <div className="flex w-full items-center justify-end">
-        <SessionHeader
-          remainingFormatted={timer.remainingFormatted}
-          isWarning={timer.phase === 'warning' || timer.phase === 'hardLimit'}
-          onEnd={() => {
-            void conv.endSession('manual');
-          }}
-        />
-      </div>
-      <VoiceIndicator state={indicatorState} amplitude={amplitude} />
-      <StatusLine text={t(statusKey)} variant={statusVariant} />
-      <TranscriptStream turns={conv.turns} agentSpeaking={agentSpeaking} />
-    </LoungeShell>
+    <>
+      <AppHeader wordmarkClickGuard={wordmarkGuard} />
+      {conv.state.name === 'error-mic' ? (
+        <LoungeShell>
+          <MicPermissionRecovery />
+        </LoungeShell>
+      ) : conv.state.name === 'error-connect' ? (
+        <LoungeShell>
+          <ConnectFailRecovery onRetry={conv.start} />
+        </LoungeShell>
+      ) : conv.state.name === 'ended' ? (
+        <LoungeShell>
+          <EndedView turns={conv.turns} onNewSession={() => location.reload()} />
+        </LoungeShell>
+      ) : conv.state.name === 'idle' ? (
+        <LoungeShell>
+          <IdlePreStart onStart={conv.start} />
+          <StatusLine text={t('lounge.status_idle')} variant="idle" />
+        </LoungeShell>
+      ) : (
+        <LoungeShell>
+          <div className="flex w-full items-center justify-end">
+            <SessionHeader
+              remainingFormatted={timer.remainingFormatted}
+              isWarning={timer.phase === 'warning' || timer.phase === 'hardLimit'}
+              onEnd={() => {
+                void conv.endSession('manual');
+              }}
+            />
+          </div>
+          <VoiceIndicator state={indicatorState} amplitude={amplitude} />
+          <StatusLine text={t(statusKey)} variant={statusVariant} />
+          <TranscriptStream turns={conv.turns} agentSpeaking={agentSpeaking} />
+        </LoungeShell>
+      )}
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('confirm.end_session_title')}</DialogTitle>
+            <DialogDescription>{t('confirm.end_session_body')}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" onClick={() => setConfirmOpen(false)}>
+              {t('confirm.end_session_no')}
+            </Button>
+            <Button
+              onClick={async () => {
+                setConfirmOpen(false);
+                await conv.endSession('manual');
+                pendingNav?.();
+                setPendingNav(null);
+              }}
+            >
+              {t('confirm.end_session_yes')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
