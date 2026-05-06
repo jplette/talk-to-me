@@ -1,19 +1,30 @@
 // app/(gated)/lounge/page.tsx
+'use client';
+
+import { useState } from 'react';
+import { LoungeShell } from '@/components/lounge/LoungeShell';
+import { IdlePreStart } from '@/components/lounge/IdlePreStart';
+import { StatusLine } from '@/components/lounge/StatusLine';
+import { useT } from '@/lib/i18n/provider';
+
 export default function LoungePage() {
+  const { t } = useT();
+  // Phase E: state only ever 'idle'. Phase G replaces this with real machine.
+  const [state] = useState<'idle'>('idle');
+
   return (
-    <main className="mx-auto max-w-2xl px-6 py-24">
-      <h1 className="text-2xl font-medium">Lounge</h1>
-      <p className="mt-4 text-neutral-600">
-        Voice-/Chat-UI kommt in Plan 3. Aktuell nur Auth-Smoke-Test.
-      </p>
-      <form action="/api/auth/logout" method="POST" className="mt-8">
-        <button
-          type="submit"
-          className="rounded border border-neutral-300 px-3 py-2 text-sm"
-        >
-          Abmelden
-        </button>
-      </form>
-    </main>
+    <LoungeShell>
+      {state === 'idle' && (
+        <>
+          <IdlePreStart
+            onStart={() => {
+              // Phase G wires this up.
+              console.log('start clicked');
+            }}
+          />
+          <StatusLine text={t('lounge.status_idle')} variant="idle" />
+        </>
+      )}
+    </LoungeShell>
   );
 }
