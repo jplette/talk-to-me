@@ -149,3 +149,13 @@ VoiceConversation
 
 - Spike-Page `app/spike/elevenlabs/page.tsx` — nach Probing gelöscht
 - Dieser Report: `docs/superpowers/spikes/2026-05-05-elevenlabs-sdk-spike.md`
+
+## Lighthouse Accessibility Baseline (Plan 3 done — 2026-05-06)
+
+Lighthouse v12 / headless Chrome, kategorie nur `accessibility`. Dev-Server lokal (`npm run dev`):
+
+- `/`         — **100/100** (0 failing audits)
+- `/login`    — **100/100** (0 failing audits)
+- `/lounge`   — **100/100** (0 failing audits, JWT-Cookie via `/api/auth/login` POST gemounted)
+
+Plan-3-Akzeptanzkriterium ≥95 erfüllt. JSON-Reports temporär in `/tmp/lh-{landing,login,lounge}.json` — nicht committed.
