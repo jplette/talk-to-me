@@ -233,6 +233,28 @@ EOF
 
 ---
 
+### Spike-Update (2026-05-06, nach Abschluss Task 1)
+
+Spike-Report: `docs/superpowers/spikes/2026-05-05-elevenlabs-sdk-spike.md` (Commit `614e049`).
+
+**Pfad-A bestätigt.** `@elevenlabs/react` v1.4.0 stellt `getInputVolume(): number` und `getOutputVolume(): number` (jeweils 0–1, safe-when-disconnected) direkt am `useConversation()`-Hook bereit. Pfad-B (DOM-`<audio>`) ist nicht möglich (SDK ownt einen internen `AudioContext`-Graph, kein `<audio>`-Element). Pfad-C (synthetic) ist nicht nötig.
+
+**Vier Konsequenzen für später kommende Tasks — Implementer-Subagents müssen das beachten:**
+
+1. **`useAudioAmplitude` (Task 25) vereinfacht sich:** Kein Discriminated-Union über `MediaStream | HTMLAudioElement | null`. Stattdessen direkte Delegation an `conv.getInputVolume()` / `getOutputVolume()` via `requestAnimationFrame`. Die Math-Helpers (`computeRms`, `applyEma`) sind weiterhin nützlich für eigenes Glättung des Volume-Werts, aber RMS aus Byte-Time-Domain entfällt.
+
+2. **`useElevenLabsConversation` (Task 27) exposed `inputAmplitude` / `outputAmplitude` als `number` (0–1) direkt** — keine Source-Discriminated-Union mehr nötig.
+
+3. **Kein eigenes `getUserMedia` im App-Code (Phase G)** — SDK managed den Mic-Stream vollständig. Mic-Permission-Failure wird vom SDK selbst gehandhabt; Phase G/H Recovery-UI tappt am SDK-`onError`-Callback ab statt eigenem Permission-Probe.
+
+4. **`<ConversationProvider>` ist Pflicht (Task 29 / Wire-Up):** `useConversation()` muss innerhalb `<ConversationProvider>` rendern. Provider muss die Lounge-Page wrappen (z. B. in `app/(gated)/lounge/page.tsx` oder `LoungeShell`).
+
+5. **Infinite-Loop-Falle (Task 27):** `useConversation()` retourniert bei jedem Render ein neues Objekt-Shape. Ein `useEffect(..., [conv])` führt zu Maximum-update-depth-Crash. Lösung: `useRef` Guard, oder `useEffect(..., [])` mit ref-basiertem Zugriff, oder selektive Dependencies (`[conv.status]`, `[conv.startSession]`).
+
+**Bonus-API (nice-to-have für Phase F):** `getInputByteFrequencyData()` / `getOutputByteFrequencyData()` liefern Voice-Range-Frequenzdaten (100–8000 Hz) als `Uint8Array` — falls ein erweiterter Spectrum-Visualizer gewünscht wird. Out-of-Scope für MVP.
+
+---
+
 ### Task 2: Install Dependencies
 
 **Files:**
@@ -2554,6 +2576,8 @@ EOF
 
 ### Task 25: useAudioAmplitude
 
+> **⚠ Spike-Update (siehe Phase A „Spike-Update"-Block):** Pfad A wurde bestätigt — der Hook delegiert direkt an `conv.getInputVolume()` / `getOutputVolume()` (beide 0–1, safe-when-disconnected). Die unten skizzierte RMS-aus-Byte-Time-Domain-Math wird **nicht** mehr für die Grund-Amplitude gebraucht. EMA-Smoothing bleibt nützlich, um den SDK-Volume-Wert zu glätten. Implementer: API entsprechend simplifizieren; `applyEma` für Glättung des Polled-Werts beibehalten, `computeRms` weglassen.
+
 **Files:**
 - Create: `tests/unit/hooks/useAudioAmplitude.test.ts`
 - Create: `lib/hooks/useAudioAmplitude.ts`
@@ -2947,6 +2971,12 @@ EOF
 ### Task 27: useElevenLabsConversation hook
 
 Wraps `@elevenlabs/react`'s `useConversation()` and exposes our app-state machine. Concrete API depends on Spike findings (Task 1) — the structure below assumes Pfad-A or Pfad-B from the spike.
+
+> **⚠ Spike-Update (siehe Phase A „Spike-Update"-Block):** Pfad A bestätigt. Konkrete Hinweise:
+> - `inputAmplitude` / `outputAmplitude` als `number` (0–1) exposen (gepollt via RAF aus `conv.getInputVolume/OutputVolume`).
+> - **Infinite-Loop-Falle:** `useConversation()` retourniert bei jedem Render ein neues Objekt — niemals `[conv]` als `useEffect`-Dep verwenden. Stattdessen `useRef` Guard oder selektive Dependencies (`[conv.status]`).
+> - **Kein eigenes `getUserMedia`** — SDK managed Mic. Permission-Errors via SDK-`onError`-Callback abfangen.
+> - **`<ConversationProvider>`** muss in Task 29 (Wire-Up) die Lounge-Page wrappen.
 
 **Files:**
 - Create: `lib/hooks/useElevenLabsConversation.ts`
