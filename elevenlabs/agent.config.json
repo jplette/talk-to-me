@@ -1,0 +1,28 @@
+{
+  "_comment": "Platzhalter-Struktur. Echte Werte kommen nach Dashboard-Setup in .env.local / Vercel.",
+  "agent_id": "<NEXT_PUBLIC_ELEVENLABS_AGENT_ID>",
+  "name": "Jonathan Plettenberg — Digital Twin",
+  "llm": "claude-haiku-4-5-20251001",
+  "voice": {
+    "voice_id": "2A5WWir1l5IrA8IzNZtJ",
+    "model_id": "eleven_multilingual_v2"
+  },
+  "session_config": {
+    "max_duration_seconds": 240,
+    "inactivity_timeout_seconds": 30
+  },
+  "webhook": {
+    "url": "https://talk-to-jonathan.plettenberg.org/api/webhooks/elevenlabs",
+    "events": ["conversation_ended"]
+  },
+  "post_call_analysis": {
+    "enabled": true,
+    "fields": ["summary", "topic_tags", "sentiment", "visitor_name", "visitor_company"]
+  },
+  "knowledge_base_ids": [
+    "<profile-kb-id>",
+    "<projects-kb-id>",
+    "<hobbies-kb-id>",
+    "<faq-kb-id>"
+  ]
+}
