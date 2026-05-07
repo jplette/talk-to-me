@@ -52,4 +52,4 @@ next-env.d.ts
 
 # Knowledge Base + Agent Prompt (persönliche Inhalte, nicht in Git)
 /content/
-elevenlabs/prompt.md
+/elevenlabs/prompt.md
