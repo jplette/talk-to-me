@@ -33,13 +33,13 @@ Den ElevenLabs Conversational AI Agent mit echtem Inhalt ausstatten, sodass der 
 
 | Parameter | Wert |
 |---|---|
-| LLM | `claude-haiku-4-5` |
+| LLM | `claude-haiku-4-5` (`claude-haiku-4-5-20251001`) |
 | Voice | Jonas (`2A5WWir1l5IrA8IzNZtJ`) |
 | TTS Model | Eleven Multilingual v2 |
 | Sprache | Auto-Detect DE/EN (im Prompt gesteuert) |
 | Session Timeout | 240s (4 min) |
 | Inactivity Timeout | 30s |
-| Webhook URL | `https://talk-to-me.vercel.app/api/webhooks/elevenlabs` |
+| Webhook URL | `https://talk-to-jonathan.plettenberg.org/api/webhooks/elevenlabs` |
 | Post-Call Analysis | Ein — `summary`, `topic_tags`, `sentiment`, `visitor_name`, `visitor_company` |
 
 Nach Dashboard-Setup:
@@ -193,7 +193,7 @@ Der vollständige Prompt ist gitignored. Diese Sektion dokumentiert die Struktur
 {
   "agent_id": "<NEXT_PUBLIC_ELEVENLABS_AGENT_ID>",
   "name": "Jonathan Plettenberg — Digital Twin",
-  "llm": "claude-haiku-4-5",
+  "llm": "claude-haiku-4-5-20251001",
   "voice": {
     "voice_id": "<jonas-voice-id>",
     "model_id": "eleven_multilingual_v2"
@@ -203,7 +203,7 @@ Der vollständige Prompt ist gitignored. Diese Sektion dokumentiert die Struktur
     "inactivity_timeout_seconds": 30
   },
   "webhook": {
-    "url": "https://talk-to-me.vercel.app/api/webhooks/elevenlabs",
+    "url": "https://talk-to-jonathan.plettenberg.org/api/webhooks/elevenlabs",
     "events": ["conversation_ended"]
   },
   "post_call_analysis": {
@@ -223,6 +223,13 @@ Der vollständige Prompt ist gitignored. Diese Sektion dokumentiert die Struktur
 
 ## 8. Dashboard-Setup Checkliste (manuell)
 
+**Schritt 0 — Custom Domain (vor ElevenLabs-Setup)**
+1. Vercel → Project → Settings → Domains → `talk-to-jonathan.plettenberg.org` hinzufügen
+2. DNS-Record bei Registrar setzen (CNAME auf `cname.vercel-dns.com` oder A-Record laut Vercel-Anweisung)
+3. Warten bis Domain aktiv (Vercel zeigt grünen Status)
+4. `https://talk-to-jonathan.plettenberg.org` im Browser prüfen → Lounge muss erreichbar sein
+
+**Schritt 1 — ElevenLabs Agent anlegen**
 1. ElevenLabs Dashboard → Agents → New Agent
 2. LLM: `claude-haiku-4-5`
 3. Voice: Jonas (`2A5WWir1l5IrA8IzNZtJ`), Model: Eleven Multilingual v2
@@ -259,6 +266,14 @@ Nach Dashboard-Setup und Agent-ID-Integration:
 
 ---
 
-## 10. Vercel Prod-URL
+## 10. URLs
 
-`https://talk-to-me.vercel.app` — bereits deployed (Plan 3). Webhook-URL im Dashboard auf diese Prod-URL zeigen, nicht localhost.
+| Verwendung | URL |
+|---|---|
+| Vercel-Default | `https://talk-to-me-jo.vercel.app` |
+| Custom Domain (Ziel) | `https://talk-to-jonathan.plettenberg.org` |
+| Webhook (nach Custom-Domain-Setup) | `https://talk-to-jonathan.plettenberg.org/api/webhooks/elevenlabs` |
+
+Custom Domain Setup ist Schritt 0 der Checkliste — Webhook-URL im ElevenLabs Dashboard erst danach eintragen, damit keine Umstellung nötig ist.
+
+**CORS:** Kein Thema. ElevenLabs-Webhook ist Server-zu-Server, das ElevenLabs SDK verbindet Browser direkt zu ElevenLabs via WebRTC — keine Same-Origin-Beschränkung auf unserer Seite.
