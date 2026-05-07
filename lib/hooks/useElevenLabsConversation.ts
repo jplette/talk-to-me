@@ -57,6 +57,7 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
   const conv = useConversation({
     onConnect: ({ conversationId: cid }: { conversationId?: string }) => {
       if (cid) setConversationId(cid);
+      lastUserSpeechRef.current = Date.now();
       setState({ name: 'active', sub: 'listening' });
       reconnectAttemptsRef.current = 0;
     },
