@@ -1,0 +1,13 @@
+diff --git a/node_modules/@elevenlabs/client/dist/utils/WebRTCConnection.js b/node_modules/@elevenlabs/client/dist/utils/WebRTCConnection.js
+index 389313f..2cff441 100644
+--- a/node_modules/@elevenlabs/client/dist/utils/WebRTCConnection.js
++++ b/node_modules/@elevenlabs/client/dist/utils/WebRTCConnection.js
+@@ -221,7 +221,7 @@ export class WebRTCConnection extends BaseConnection {
+                     });
+                 });
+             // Connect to the LiveKit room
+-            await room.connect(livekitUrl, conversationToken);
++            await room.connect(livekitUrl, conversationToken, { rtcConfig: { iceTransportPolicy: "relay" } });
+             // Wait for the Connected event to ensure isConnected is true
+             await new Promise(resolve => {
+                 if (connection.isConnected) {
