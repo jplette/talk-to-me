@@ -1,0 +1,13 @@
+diff --git a/node_modules/livekit-client/dist/livekit-client.esm.mjs b/node_modules/livekit-client/dist/livekit-client.esm.mjs
+index 2725acd..14621e1 100644
+--- a/node_modules/livekit-client/dist/livekit-client.esm.mjs
++++ b/node_modules/livekit-client/dist/livekit-client.esm.mjs
+@@ -18053,7 +18053,7 @@ class PCTransportManager {
+           abortController.signal.removeEventListener('abort', onAbort);
+         };
+         const onAnswered = offerId => {
+-          if (offerId > checkpoint) {
++          if (offerId === 0 || offerId > checkpoint) {
+             cleanup();
+             resolve();
+           }
