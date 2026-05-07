@@ -114,15 +114,12 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
   const start = useCallback(async () => {
     setState({ name: 'connecting' });
     try {
-      await conv.startSession({
-        agentId,
-        overrides: { agent: { language: uiLang } },
-      });
+      await conv.startSession({ agentId });
     } catch {
       reconnectAttemptsRef.current += 1;
       setState((s) => (s.name === 'connecting' ? { name: 'error-connect' } : s));
     }
-  }, [agentId, conv, uiLang]);
+  }, [agentId, conv]);
   startRef.current = start;
 
   const endSession = useCallback(
