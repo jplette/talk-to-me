@@ -50,6 +50,9 @@ next-env.d.ts
 # Brainstorming visual companion (local mockups)
 .superpowers/
 
+# Termdock local session data
+.termdock/
+
 # Knowledge Base + Agent Prompt (persönliche Inhalte, nicht in Git)
 /content/
 /elevenlabs/prompt.md
