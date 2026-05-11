@@ -1,9 +1,9 @@
 // lib/theme/cookie.ts
 export type Theme = 'light' | 'dark';
 
-export function readThemeCookie(value: string | undefined): Theme | null {
+export function readThemeCookie(value: string | undefined): Theme {
   if (value === 'light' || value === 'dark') return value;
-  return null;
+  return 'dark';
 }
 
 export function serializeThemeCookie(theme: Theme): string {

@@ -48,7 +48,7 @@ export default async function RootLayout({
   return (
     <html
       lang={lang}
-      data-theme={theme ?? undefined}
+      data-theme={theme}
       className={`${inter.variable} ${jetbrainsMono.variable} h-full`}
       suppressHydrationWarning
     >

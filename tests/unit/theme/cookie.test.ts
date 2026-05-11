@@ -8,10 +8,10 @@ describe('theme cookie', () => {
     expect(readThemeCookie('light')).toBe('light');
     expect(readThemeCookie('dark')).toBe('dark');
   });
-  it('returns null for missing/invalid', () => {
-    expect(readThemeCookie(undefined)).toBe(null);
-    expect(readThemeCookie('')).toBe(null);
-    expect(readThemeCookie('greenpink')).toBe(null);
+  it('returns dark for missing/invalid', () => {
+    expect(readThemeCookie(undefined)).toBe('dark');
+    expect(readThemeCookie('')).toBe('dark');
+    expect(readThemeCookie('greenpink')).toBe('dark');
   });
   it('serializes with samesite=lax max-age 1y', () => {
     const s = serializeThemeCookie('dark');
