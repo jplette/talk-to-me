@@ -4,10 +4,9 @@
 import { useEffect, useState } from 'react';
 
 export function useNetworkStatus() {
-  const [online, setOnline] = useState<boolean>(
-    typeof navigator !== 'undefined' ? navigator.onLine : true
-  );
+  const [online, setOnline] = useState(true);
   useEffect(() => {
+    setOnline(navigator.onLine);
     function on() { setOnline(true); }
     function off() { setOnline(false); }
     window.addEventListener('online', on);
