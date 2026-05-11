@@ -4,14 +4,15 @@
 import { useEffect, useRef } from 'react';
 
 const WAVES = [
-  { freq: 0.0065, amp: 28, speed: 0.28, phase: 0,    yRatio: 0.18 },
-  { freq: 0.0100, amp: 18, speed: 0.45, phase: 2.1,  yRatio: 0.35 },
-  { freq: 0.0050, amp: 40, speed: 0.20, phase: 4.3,  yRatio: 0.52 },
-  { freq: 0.0130, amp: 14, speed: 0.58, phase: 1.4,  yRatio: 0.68 },
-  { freq: 0.0080, amp: 22, speed: 0.34, phase: 3.6,  yRatio: 0.84 },
+  { freq: 0.0065, amp: 32, speed: 0.28, phase: 0,    yRatio: 0.18 },
+  { freq: 0.0100, amp: 20, speed: 0.45, phase: 2.1,  yRatio: 0.35 },
+  { freq: 0.0050, amp: 48, speed: 0.20, phase: 4.3,  yRatio: 0.52 },
+  { freq: 0.0130, amp: 16, speed: 0.58, phase: 1.4,  yRatio: 0.68 },
+  { freq: 0.0080, amp: 26, speed: 0.34, phase: 3.6,  yRatio: 0.84 },
 ] as const;
 
-const OPACITIES = [0.05, 0.07, 0.09, 0.07, 0.05] as const;
+// Opacity per wave — middle wave most prominent
+const OPACITIES = [0.11, 0.15, 0.20, 0.15, 0.11] as const;
 
 export function WaveBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -48,9 +49,16 @@ export function WaveBackground() {
 
       WAVES.forEach((wave, i) => {
         const yBase = wave.yRatio * h;
+        const isCenter = i === 2;
+
         ctx.beginPath();
         ctx.strokeStyle = `rgba(239,131,84,${OPACITIES[i]})`;
-        ctx.lineWidth = 1;
+        ctx.lineWidth = isCenter ? 1.5 : 1;
+
+        if (isCenter) {
+          ctx.shadowColor = 'rgba(239,131,84,0.25)';
+          ctx.shadowBlur = 8;
+        }
 
         for (let x = 0; x <= w; x += 4) {
           const y = yBase + Math.sin(x * wave.freq + t * wave.speed + wave.phase) * wave.amp;
@@ -59,6 +67,7 @@ export function WaveBackground() {
         }
 
         ctx.stroke();
+        ctx.shadowBlur = 0;
       });
 
       ctx.restore();

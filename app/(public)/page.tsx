@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useT } from '@/lib/i18n/provider';
 import { WaveBackground } from '@/components/landing/WaveBackground';
+import { TypewriterPhrase } from '@/components/landing/TypewriterPhrase';
 
 export default function LandingPage() {
   const { t, lang } = useT();
@@ -59,9 +60,7 @@ export default function LandingPage() {
         <span className="hero-line block">Engineer.</span>
         <span className="hero-line block">
           {lang === 'en' ? 'Say ' : 'Sag '}
-          <em style={{ color: 'var(--jk-flame)' }}>
-            {lang === 'en' ? 'Hello.' : 'Hallo.'}
-          </em>
+          <TypewriterPhrase lang={lang} />
         </span>
       </h1>
 
