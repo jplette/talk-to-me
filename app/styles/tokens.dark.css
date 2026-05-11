@@ -1,27 +1,27 @@
-/* app/styles/tokens.dark.css — derived dark tokens (visual spec §2.3). */
+/* app/styles/tokens.dark.css — Warm Terminal dark tokens */
 
 [data-theme='dark'] {
-  --jk-bg:        #14151C;
-  --jk-bg-elev-1: #1D1F29;
-  --jk-bg-elev-2: #232532;
+  --jk-bg:        #0F1117;
+  --jk-bg-elev-1: #161820;
+  --jk-bg-elev-2: #1D1F2B;
 
-  --fg-1: #F0F0F3;
-  --fg-2: #A8AAB6;
-  --fg-3: #6E7180;
+  --fg-1: #F0ECE6;
+  --fg-2: rgba(240,236,230,0.55);
+  --fg-3: rgba(240,236,230,0.25);
 
-  --line:        #2A2C39;
-  --line-strong: #353748;
+  --line:        rgba(255,255,255,0.07);
+  --line-strong: rgba(255,255,255,0.12);
 
-  --jk-flame-deep: #D67043;
+  --jk-flame-deep: #EF8354;
 
-  /* Status semantic — heller auf dark */
-  --warn: #E29A2D;
+  /* Status semantic */
+  --warn: #EF8354;
   --err:  #EF6E55;
-  --ok:   #58BC92;
+  --ok:   #2F7D5B;
 
-  /* Shadows: dimmer auf dark */
+  /* Shadows */
   --sh-0: 0 0 0 1px rgba(255,255,255,0.06);
-  --sh-1: 0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06);
-  --sh-2: 0 2px 6px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.35);
-  --sh-3: 0 8px 24px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.4);
+  --sh-1: 0 1px 2px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+  --sh-2: 0 2px 8px rgba(0,0,0,0.55), 0 1px 2px rgba(0,0,0,0.4);
+  --sh-3: 0 8px 24px rgba(0,0,0,0.65), 0 2px 6px rgba(0,0,0,0.5);
 }
