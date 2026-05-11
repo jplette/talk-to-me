@@ -56,12 +56,24 @@ function LoungeInner() {
       }
     : undefined;
 
+  const warningText = lang === 'de'
+    ? 'Hinweis: Das Gespräch endet in 30 Sekunden. Bitte das Gespräch langsam abschließen.'
+    : 'Note: The conversation ends in 30 seconds. Please start wrapping up.';
+  const goodbyeText = lang === 'de'
+    ? 'Das Gespräch endet jetzt in wenigen Sekunden. Bitte sage sofort einen kurzen Abschiedssatz.'
+    : 'The conversation ends in a few seconds. Please say a brief goodbye right now.';
+
   const timer = useSessionTimer({
     running: isActive,
-    onWarning: () =>
+    onWarning: () => {
       conv.setState((s) =>
         s.name === 'active' ? { name: 'warning', sub: s.sub } : s,
-      ),
+      );
+      conv.sendContextualUpdate(warningText);
+    },
+    onGoodbye: () => {
+      conv.sendContextualUpdate(goodbyeText);
+    },
     onHardLimit: () => {
       void conv.endSession('timeout');
     },

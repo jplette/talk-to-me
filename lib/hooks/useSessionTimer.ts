@@ -6,22 +6,35 @@ import { SESSION } from '@/lib/config';
 
 export type TimerPhase = 'idle' | 'active' | 'warning' | 'hardLimit';
 
+const GOODBYE_AT_MS = SESSION.HARD_LIMIT_MS - SESSION.GRACEFUL_END_BUDGET_MS;
+
 type Options = {
   running: boolean;
   onWarning?: () => void;
+  onGoodbye?: () => void;
   onHardLimit?: () => void;
 };
 
-export function useSessionTimer({ running, onWarning, onHardLimit }: Options) {
+export function useSessionTimer({ running, onWarning, onGoodbye, onHardLimit }: Options) {
   const [elapsedMs, setElapsedMs] = useState(0);
   const startRef = useRef<number | null>(null);
   const warnedRef = useRef(false);
+  const goodbyedRef = useRef(false);
   const limitedRef = useRef(false);
+
+  // Refs keep callbacks stable so the interval isn't restarted on every render.
+  const onWarningRef = useRef(onWarning);
+  const onGoodbyeRef = useRef(onGoodbye);
+  const onHardLimitRef = useRef(onHardLimit);
+  onWarningRef.current = onWarning;
+  onGoodbyeRef.current = onGoodbye;
+  onHardLimitRef.current = onHardLimit;
 
   useEffect(() => {
     if (!running) {
       startRef.current = null;
       warnedRef.current = false;
+      goodbyedRef.current = false;
       limitedRef.current = false;
       setElapsedMs(0);
       return;
@@ -33,15 +46,19 @@ export function useSessionTimer({ running, onWarning, onHardLimit }: Options) {
       setElapsedMs(elapsed);
       if (elapsed >= SESSION.WARNING_AT_MS && !warnedRef.current) {
         warnedRef.current = true;
-        onWarning?.();
+        onWarningRef.current?.();
+      }
+      if (elapsed >= GOODBYE_AT_MS && !goodbyedRef.current) {
+        goodbyedRef.current = true;
+        onGoodbyeRef.current?.();
       }
       if (elapsed >= SESSION.HARD_LIMIT_MS && !limitedRef.current) {
         limitedRef.current = true;
-        onHardLimit?.();
+        onHardLimitRef.current?.();
       }
     }, 250);
     return () => window.clearInterval(id);
-  }, [running, onWarning, onHardLimit]);
+  }, [running]);
 
   let phase: TimerPhase = 'idle';
   if (running) {

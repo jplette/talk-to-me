@@ -234,5 +234,6 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
     outputAmplitude,
     start,
     endSession,
+    sendContextualUpdate: conv.sendContextualUpdate,
   };
 }

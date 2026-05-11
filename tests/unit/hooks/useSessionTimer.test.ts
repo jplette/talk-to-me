@@ -34,6 +34,16 @@ describe('useSessionTimer', () => {
     expect(onWarn).toHaveBeenCalledOnce();
   });
 
+  it('emits goodbye at 3:55', () => {
+    const onGoodbye = vi.fn();
+    const { result } = renderHook(() =>
+      useSessionTimer({ running: true, onGoodbye })
+    );
+    act(() => { vi.advanceTimersByTime(235_000); });
+    expect(onGoodbye).toHaveBeenCalledOnce();
+    expect(result.current.phase).toBe('warning');
+  });
+
   it('emits hardLimit at 4:00', () => {
     const onLimit = vi.fn();
     const { result } = renderHook(() =>
