@@ -27,7 +27,7 @@ export default function LandingPage() {
   return (
     <section
       ref={containerRef}
-      className="relative mx-auto flex w-full max-w-[560px] flex-col items-start gap-5 px-6 py-16 md:py-[22vh]"
+      className="relative mx-auto flex w-full max-w-[560px] flex-col items-start gap-5 px-6 py-16"
     >
       {/* Radial glow top-right */}
       <div
