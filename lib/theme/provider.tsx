@@ -27,23 +27,14 @@ export function ThemeProvider({
   initialTheme,
   children,
 }: {
-  initialTheme: Theme | null;
+  initialTheme: Theme;
   children: React.ReactNode;
 }) {
   const [theme, setTheme] = useState<Theme>(initialTheme ?? 'light');
   const [hydrated, setHydrated] = useState(false);
 
-  // On first client render: if no cookie set, fall back to localStorage > prefers-color-scheme.
+  // On first client render: cookie is always set, so just mark as hydrated.
   useEffect(() => {
-    if (initialTheme) {
-      setHydrated(true);
-      return;
-    }
-    const stored = window.localStorage.getItem('tt_theme');
-    const next: Theme =
-      stored === 'light' || stored === 'dark' ? stored : systemTheme();
-    setTheme(next);
-    document.documentElement.dataset.theme = next;
     setHydrated(true);
   }, [initialTheme]);
 
