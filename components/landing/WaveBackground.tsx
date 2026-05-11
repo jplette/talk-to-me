@@ -86,7 +86,7 @@ export function WaveBackground() {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10"
+      className="pointer-events-none fixed inset-0 z-[0]"
       style={{ width: '100vw', height: '100vh' }}
     />
   );

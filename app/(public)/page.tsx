@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useT } from '@/lib/i18n/provider';
-import { WaveBackground } from '@/components/landing/WaveBackground';
 import { TypewriterPhrase } from '@/components/landing/TypewriterPhrase';
 
 export default function LandingPage() {
@@ -30,8 +29,6 @@ export default function LandingPage() {
       ref={containerRef}
       className="relative mx-auto flex w-full max-w-[560px] flex-col items-start gap-5 px-6 py-16 md:py-[22vh]"
     >
-      <WaveBackground />
-
       {/* Radial glow top-right */}
       <div
         aria-hidden="true"

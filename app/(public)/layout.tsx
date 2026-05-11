@@ -1,6 +1,7 @@
 // app/(public)/layout.tsx
 import { AppHeader } from '@/components/AppHeader';
 import { Footer } from '@/components/Footer';
+import { WaveBackground } from '@/components/landing/WaveBackground';
 
 export default function PublicLayout({
   children,
@@ -9,8 +10,10 @@ export default function PublicLayout({
 }) {
   return (
     <>
+      {/* z-0: canvas renders above body background, but below z-[1] content */}
+      <WaveBackground />
       <AppHeader />
-      <main className="flex-1">{children}</main>
+      <main className="relative z-[1] flex-1">{children}</main>
       <Footer />
     </>
   );
