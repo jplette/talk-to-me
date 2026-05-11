@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function ImprintPage() {
   return (
-    <main className="mx-auto max-w-[560px] px-6 py-16 text-sm leading-relaxed">
+    <div className="mx-auto max-w-[560px] px-6 py-16 text-sm leading-relaxed">
       <h1
         className="mb-8 text-2xl font-bold tracking-tight text-foreground"
         style={{ fontFamily: 'var(--font-display)' }}
@@ -57,6 +57,6 @@ export default function ImprintPage() {
           entnehmen Sie der Datenschutzerklärung.
         </p>
       </section>
-    </main>
+    </div>
   );
 }
