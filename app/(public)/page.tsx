@@ -36,8 +36,7 @@ export default function LandingPage() {
         Senior<br />Engineer.<br />
         {lang === 'en' ? 'Say ' : 'Sag '}
         <em
-          className="not-italic"
-          style={{ color: 'var(--jk-flame)', fontStyle: 'italic' }}
+          style={{ color: 'var(--jk-flame)' }}
         >
           {lang === 'en' ? 'Hello.' : 'Hallo.'}
         </em>
