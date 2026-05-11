@@ -61,6 +61,9 @@ function extractStringArrayField(
 ): string[] | null {
   const v = results?.[key]?.value;
   if (Array.isArray(v) && v.every((x) => typeof x === 'string')) return v;
+  if (typeof v === 'string' && v.trim().length > 0) {
+    return v.split(',').map((s) => s.trim()).filter(Boolean);
+  }
   return null;
 }
 
