@@ -24,7 +24,6 @@ const dmMono = DM_Mono({
 const dmSans = DM_Sans({
   variable: '--font-body',
   subsets: ['latin'],
-  weight: ['300', '400', '500'],
 });
 
 export const metadata: Metadata = {
