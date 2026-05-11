@@ -67,6 +67,9 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
     onMessage: ({ message, source }) => {
       // SDK source is "user" | "ai"; map to Turn role "user" | "agent"
       const role: Turn['role'] = source === 'user' ? 'user' : 'agent';
+      // Filter out frontend-injected system messages — they're triggers for the agent,
+      // not real user speech, and would look confusing in the transcript.
+      if (role === 'user' && message.startsWith('[system:')) return;
       setTurns((prev) => {
         const last = prev[prev.length - 1];
         const next: Turn = { role, message };
@@ -235,5 +238,6 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
     start,
     endSession,
     sendContextualUpdate: conv.sendContextualUpdate,
+    sendUserMessage: conv.sendUserMessage,
   };
 }
