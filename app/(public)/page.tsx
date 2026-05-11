@@ -54,7 +54,7 @@ export default function LandingPage() {
         style={{ fontFamily: 'var(--font-display)' }}
       >
         <span className="hero-line block">Senior</span>
-        <span className="hero-line block">Engineer.</span>
+        <span className="hero-line block">Software Engineer.</span>
         <span className="hero-line block">
           {lang === 'en' ? 'Say ' : 'Sag '}
           <TypewriterPhrase lang={lang} />
