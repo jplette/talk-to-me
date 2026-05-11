@@ -10,13 +10,15 @@ type Props = {
   onEnd: () => void;
 };
 
-export function SessionHeader({
-  remainingFormatted,
-  isWarning,
-  onEnd,
-}: Props) {
+export function SessionHeader({ remainingFormatted, isWarning, onEnd }: Props) {
   return (
-    <div className="flex items-center gap-3">
+    <div
+      className={cn(
+        'sticky top-14 z-40 flex w-full flex-shrink-0 items-center justify-between',
+        'border-b border-border px-6 py-2',
+        'bg-background/90 backdrop-blur-sm md:px-10',
+      )}
+    >
       <span
         className={cn(
           'font-mono text-sm tabular-nums transition-colors',

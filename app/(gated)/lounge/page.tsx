@@ -145,20 +145,18 @@ function LoungeInner() {
           <StatusLine text={t('lounge.status_idle')} variant="idle" />
         </LoungeShell>
       ) : (
-        <LoungeShell>
-          <div className="flex w-full items-center justify-end">
-            <SessionHeader
-              remainingFormatted={timer.remainingFormatted}
-              isWarning={timer.phase === 'warning' || timer.phase === 'hardLimit'}
-              onEnd={() => {
-                void conv.endSession('manual');
-              }}
-            />
+        <>
+          <SessionHeader
+            remainingFormatted={timer.remainingFormatted}
+            isWarning={timer.phase === 'warning' || timer.phase === 'hardLimit'}
+            onEnd={() => { void conv.endSession('manual'); }}
+          />
+          <div className="flex flex-1 flex-col items-center gap-6 overflow-y-auto px-6 py-6 min-h-0 md:px-10">
+            <VoiceIndicator state={indicatorState} amplitude={amplitude} />
+            <StatusLine text={t(statusKey)} variant={statusVariant} />
+            <TranscriptStream turns={conv.turns} agentSpeaking={agentSpeaking} />
           </div>
-          <VoiceIndicator state={indicatorState} amplitude={amplitude} />
-          <StatusLine text={t(statusKey)} variant={statusVariant} />
-          <TranscriptStream turns={conv.turns} agentSpeaking={agentSpeaking} />
-        </LoungeShell>
+        </>
       )}
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent>
