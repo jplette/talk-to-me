@@ -63,8 +63,7 @@ export default function LandingPage() {
 
       {/* Lede */}
       <p
-        className="hero-lede max-w-[36ch] text-sm font-light leading-relaxed"
-        style={{ color: 'rgba(240,236,230,0.45)' }}
+        className="hero-lede max-w-[36ch] text-sm font-light leading-relaxed text-muted-foreground"
       >
         {t('landing.lede')}
       </p>

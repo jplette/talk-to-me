@@ -12,7 +12,7 @@ const WAVES = [
 ] as const;
 
 // Opacity per wave — middle wave most prominent
-const OPACITIES = [0.11, 0.15, 0.20, 0.15, 0.11] as const;
+const OPACITIES = [0.05, 0.07, 0.10, 0.07, 0.05] as const;
 
 export function WaveBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -56,8 +56,8 @@ export function WaveBackground() {
         ctx.lineWidth = isCenter ? 1.5 : 1;
 
         if (isCenter) {
-          ctx.shadowColor = 'rgba(239,131,84,0.25)';
-          ctx.shadowBlur = 8;
+          ctx.shadowColor = 'rgba(239,131,84,0.15)';
+          ctx.shadowBlur = 4;
         }
 
         for (let x = 0; x <= w; x += 4) {

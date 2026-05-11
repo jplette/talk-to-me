@@ -59,7 +59,7 @@ export default async function RootLayout({
       className={`${spaceGrotesk.variable} ${dmMono.variable} ${dmSans.variable} h-full`}
       suppressHydrationWarning
     >
-      <body className="h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full flex flex-col bg-background text-foreground">
         <ThemeProvider initialTheme={theme}>
           <I18nProvider initialLang={lang}>
             {children}

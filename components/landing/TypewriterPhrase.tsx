@@ -4,8 +4,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 const PHRASES = {
-  de: ['Hallo.', 'Was treibt dich an?', 'Erzähl von einem Fail.', 'Wie denkst du über AI?'],
-  en: ['Hello.', 'What drives you?', 'Tell me about a failure.', 'Hot take on AI?'],
+  de: ['Hallo.', 'Was treibt dich an?', 'Was arbeitest du gerade?', 'Wie denkst du über AI?'],
+  en: ['Hello.', 'What drives you?', 'What are you working on?', 'Hot take on AI?'],
 } as const;
 
 const TYPE_MS = 55;
