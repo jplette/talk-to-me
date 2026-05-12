@@ -181,7 +181,7 @@ function LoungeInner() {
                       ? '[system: Session endet jetzt — bitte verabschiede dich]'
                       : '[system: session ending now — please say goodbye]',
                   );
-                  await new Promise<void>((r) => setTimeout(r, 500));
+                  await new Promise<void>((r) => setTimeout(r, 5000));
                 }
                 await conv.endSession('manual');
                 pendingNav?.();
