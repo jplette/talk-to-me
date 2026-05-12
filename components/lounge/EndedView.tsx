@@ -2,7 +2,6 @@
 'use client';
 
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
 import { TranscriptStream } from './TranscriptStream';
 import type { Turn } from '@/lib/hooks/useElevenLabsConversation';
 import { useT } from '@/lib/i18n/provider';
@@ -30,10 +29,23 @@ export function EndedView({ turns, onNewSession }: Props) {
         <TranscriptStream turns={turns} agentSpeaking={false} />
       </div>
       <div className="flex flex-col items-center gap-2 sm:flex-row">
-        <Button onClick={onNewSession}>{t('lounge.ended_new_session')}</Button>
-        <Button variant="ghost" onClick={copyTranscript}>
+        <button
+          onClick={onNewSession}
+          className="inline-flex items-center gap-2 rounded-[5px] border px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest transition-colors hover:bg-[rgba(239,131,84,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--jk-flame)]"
+          style={{
+            background: 'rgba(239,131,84,0.10)',
+            borderColor: 'rgba(239,131,84,0.28)',
+            color: 'var(--jk-flame)',
+          }}
+        >
+          {t('lounge.ended_new_session')}
+        </button>
+        <button
+          onClick={copyTranscript}
+          className="px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none"
+        >
           {t('lounge.ended_copy_transcript')}
-        </Button>
+        </button>
       </div>
       <p className="text-sm text-muted-foreground">
         {t('lounge.ended_caption')}{' '}
