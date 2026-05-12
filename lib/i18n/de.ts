@@ -4,7 +4,7 @@ import type { Messages } from './messages';
 export const de: Messages = {
   'landing.headline':   'Sprich mit\nmeinem digitalen\nZwilling.',
   'landing.lede':       'Eine kuratierte Voice-Konversation über meinen Werdegang, meine Projekte, und wie ich arbeite. Vier Minuten, deine Fragen.',
-  'landing.login_cta':  'Login',
+  'landing.login_cta':  'Anmelden',
 
   'login.heading':                  'Zugang',
   'login.lede':                     'Du brauchst das geteilte Passwort, das du per Email/Slack erhalten hast.',
@@ -24,7 +24,7 @@ export const de: Messages = {
 
   'lounge.idle_heading':   'Sprich mit Jonathan.',
   'lounge.idle_lede':      'Wir reden 4 Minuten — über meinen Werdegang, Projekte, und wie ich arbeite.',
-  'lounge.idle_cta':       'Konversation starten',
+  'lounge.idle_cta':       'Jetzt starten',
   'lounge.idle_caption':   'Mic-Permission wird gleich gefragt.',
 
   'lounge.status_idle':           'Bereit',

@@ -59,7 +59,7 @@ export function IdlePreStart({ onStart }: Props) {
           color: 'var(--jk-flame)',
         }}
       >
-        ./start-session.sh <span aria-hidden="true">↵</span>
+        {t('lounge.idle_cta')} <span aria-hidden="true">↵</span>
       </button>
 
       <p

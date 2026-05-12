@@ -78,7 +78,7 @@ export default function LandingPage() {
           color: 'var(--jk-flame)',
         }}
       >
-        ./connect.sh <span aria-hidden="true">→</span>
+        {t('landing.login_cta')} <span aria-hidden="true">→</span>
       </Link>
     </section>
   );

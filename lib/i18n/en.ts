@@ -4,7 +4,7 @@ import type { Messages } from './messages';
 export const en: Messages = {
   'landing.headline':   'Talk to\nmy digital\ntwin.',
   'landing.lede':       'A curated voice conversation about my work history, projects, and how I operate. Four minutes, your questions.',
-  'landing.login_cta':  'Login',
+  'landing.login_cta':  'Sign in',
 
   'login.heading':                  'Access',
   'login.lede':                     'You need the shared password you received via email/Slack.',
@@ -24,7 +24,7 @@ export const en: Messages = {
 
   'lounge.idle_heading':   'Talk to Jonathan.',
   'lounge.idle_lede':      'Four minutes — about my work history, projects, and how I operate.',
-  'lounge.idle_cta':       'Start conversation',
+  'lounge.idle_cta':       'Start now',
   'lounge.idle_caption':   'Mic permission will be asked next.',
 
   'lounge.status_idle':           'Ready',
