@@ -49,6 +49,17 @@ function LoungeInner() {
     (conv.state.name === 'active' || conv.state.name === 'warning') &&
     conv.state.sub === 'speaking';
 
+  async function sendGoodbyeAndWait() {
+    if (isActive) {
+      conv.sendUserMessage(
+        lang === 'de'
+          ? '[system: Session endet jetzt — bitte verabschiede dich]'
+          : '[system: session ending now — please say goodbye]',
+      );
+      await new Promise<void>((r) => setTimeout(r, 5000));
+    }
+  }
+
   const wordmarkGuard = isActive
     ? (proceed: () => void) => {
         setPendingNav(() => proceed);
@@ -149,7 +160,7 @@ function LoungeInner() {
           <SessionHeader
             remainingFormatted={timer.remainingFormatted}
             isWarning={timer.phase === 'warning' || timer.phase === 'hardLimit'}
-            onEnd={() => { void conv.endSession('manual'); }}
+            onEnd={async () => { await sendGoodbyeAndWait(); await conv.endSession('manual'); }}
           />
           <div className="flex flex-1 flex-col items-center gap-6 overflow-y-auto px-6 py-6 min-h-0 md:px-10">
             <VoiceIndicator state={indicatorState} amplitude={amplitude} />
@@ -171,18 +182,7 @@ function LoungeInner() {
             <Button
               onClick={async () => {
                 setConfirmOpen(false);
-                if (
-                  conv.state.name === 'active' ||
-                  conv.state.name === 'warning' ||
-                  conv.state.name === 'inactivity-prompt'
-                ) {
-                  conv.sendUserMessage(
-                    lang === 'de'
-                      ? '[system: Session endet jetzt — bitte verabschiede dich]'
-                      : '[system: session ending now — please say goodbye]',
-                  );
-                  await new Promise<void>((r) => setTimeout(r, 5000));
-                }
+                await sendGoodbyeAndWait();
                 await conv.endSession('manual');
                 pendingNav?.();
                 setPendingNav(null);
