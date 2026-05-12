@@ -35,7 +35,15 @@ export function EndedView({ turns, onNewSession }: Props) {
           {t('lounge.ended_copy_transcript')}
         </Button>
       </div>
-      <p className="text-sm text-muted-foreground">{t('lounge.ended_caption')}</p>
+      <p className="text-sm text-muted-foreground">
+        {t('lounge.ended_caption')}{' '}
+        <a
+          href="mailto:jonathan@plettenberg.org"
+          className="underline underline-offset-2 hover:text-foreground transition-colors"
+        >
+          jonathan@plettenberg.org
+        </a>
+      </p>
     </section>
   );
 }
