@@ -60,6 +60,22 @@ function LoungeInner() {
     }
   }
 
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (conv.state.name === 'inactivity-prompt') {
+      if (!inactivityTimerRef.current) {
+        inactivityTimerRef.current = setTimeout(async () => {
+          try { await conv.endSession('inactivity'); } catch {}
+        }, 15000);
+      }
+    } else {
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+        inactivityTimerRef.current = null;
+      }
+    }
+  }, [conv.state.name]);
+
   const goodbyeClosingRef = useRef(false);
   useEffect(() => {
     if (!isActive || goodbyeClosingRef.current) return;
