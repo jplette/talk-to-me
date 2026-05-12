@@ -171,6 +171,12 @@ function LoungeInner() {
             <Button
               onClick={async () => {
                 setConfirmOpen(false);
+                conv.sendUserMessage(
+                  lang === 'de'
+                    ? '[system: Session endet jetzt — bitte verabschiede dich]'
+                    : '[system: session ending now — please say goodbye]',
+                );
+                await new Promise<void>((r) => setTimeout(r, 500));
                 await conv.endSession('manual');
                 pendingNav?.();
                 setPendingNav(null);
