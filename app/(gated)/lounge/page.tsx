@@ -160,7 +160,10 @@ function LoungeInner() {
           <SessionHeader
             remainingFormatted={timer.remainingFormatted}
             isWarning={timer.phase === 'warning' || timer.phase === 'hardLimit'}
-            onEnd={async () => { await sendGoodbyeAndWait(); await conv.endSession('manual'); }}
+            onEnd={async () => {
+              await sendGoodbyeAndWait();
+              try { await conv.endSession('manual'); } catch {}
+            }}
           />
           <div className="flex flex-1 flex-col items-center gap-6 overflow-y-auto px-6 py-6 min-h-0 md:px-10">
             <VoiceIndicator state={indicatorState} amplitude={amplitude} />
@@ -183,7 +186,7 @@ function LoungeInner() {
               onClick={async () => {
                 setConfirmOpen(false);
                 await sendGoodbyeAndWait();
-                await conv.endSession('manual');
+                try { await conv.endSession('manual'); } catch {}
                 pendingNav?.();
                 setPendingNav(null);
               }}
