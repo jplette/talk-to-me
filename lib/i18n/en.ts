@@ -41,7 +41,7 @@ export const en: Messages = {
   'lounge.ended_new_session':     'New session',
   'lounge.ended_copy_transcript': 'Copy transcript',
   'lounge.ended_copy_toast':      'Transcript copied',
-  'lounge.ended_caption':         'Did you find what you needed?',
+  'lounge.ended_caption':         'More questions? →',
 
   'error.mic_denied_heading':   'No conversation without mic access.',
   'error.mic_denied_lede':      'Allow mic access in your browser and reload the page.',
