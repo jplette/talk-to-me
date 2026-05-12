@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ConversationProvider } from '@elevenlabs/react';
 import { AppHeader } from '@/components/AppHeader';
 import { Button } from '@/components/ui/button';
@@ -59,6 +59,19 @@ function LoungeInner() {
       await new Promise<void>((r) => setTimeout(r, 8000));
     }
   }
+
+  const goodbyeClosingRef = useRef(false);
+  useEffect(() => {
+    if (!isActive || goodbyeClosingRef.current) return;
+    const lastTurn = conv.turns[conv.turns.length - 1];
+    if (lastTurn?.role === 'agent' && lastTurn.message.includes('jonathan@plettenberg.org')) {
+      goodbyeClosingRef.current = true;
+      const t = setTimeout(async () => {
+        try { await conv.endSession('goodbye'); } catch {}
+      }, 3000);
+      return () => clearTimeout(t);
+    }
+  }, [conv.turns, isActive]);
 
   const wordmarkGuard = isActive
     ? (proceed: () => void) => {
