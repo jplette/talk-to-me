@@ -67,8 +67,20 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
       setState({ name: 'active', sub: 'listening' });
       reconnectAttemptsRef.current = 0;
     },
-    onDisconnect: () => {
-      // Transitions handled in endSession + reconnect flow.
+    onDisconnect: (details) => {
+      if (details.reason === 'user') return; // expected — endSession() already transitioning
+      if (details.reason === 'agent') {
+        // Agent ended the session server-side (end_call tool, max_duration, etc.)
+        queueMicrotask(() => endSessionRef.current?.('goodbye'));
+      } else {
+        // Unexpected error disconnect — enter reconnect flow
+        setState((s) => {
+          if (s.name === 'active' || s.name === 'warning' || s.name === 'inactivity-prompt') {
+            return { name: 'reconnecting' };
+          }
+          return s;
+        });
+      }
     },
     onMessage: ({ message, source }) => {
       // SDK source is "user" | "ai"; map to Turn role "user" | "agent"
@@ -113,6 +125,11 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
         }
         return s;
       });
+      // Agent speaking = session activity. Reset the inactivity timer so it only
+      // counts from when *nobody* is speaking, not from the last user transcript.
+      if (mode === 'speaking') {
+        lastUserSpeechRef.current = Date.now();
+      }
       // When goodbye is pending, watch for agent speaking → listening transition.
       // That signals the agent has finished its farewell response.
       if (goodbyePendingRef.current) {
@@ -258,6 +275,19 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
       }
     };
   }, [state.name]);
+
+  // ---- Safety-net: conv.status as fallback when onDisconnect never fires ----
+  // Observed: some LiveKit WebSocket closes (empty reason) bypass the onDisconnect callback entirely.
+  // Watching conv.status directly catches those and prevents the UI from freezing.
+  useEffect(() => {
+    if (conv.status !== 'disconnected') return;
+    setState((s) => {
+      if (s.name === 'active' || s.name === 'warning' || s.name === 'inactivity-prompt') {
+        return { name: 'reconnecting' };
+      }
+      return s;
+    });
+  }, [conv.status]);
 
   // ---- Reconnect attempts: max 2× over ~5s ----
   useEffect(() => {
