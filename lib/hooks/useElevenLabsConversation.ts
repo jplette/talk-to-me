@@ -54,6 +54,12 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
   const endSessionRef = useRef<((reason: EndReason) => Promise<void>) | null>(null);
   const startRef = useRef<(() => Promise<void>) | null>(null);
 
+  // Goodbye-aware close state
+  const goodbyePendingRef = useRef(false);
+  const goodbyeSeenSpeakingRef = useRef(false);
+  const goodbyeTimeoutRef = useRef<number | null>(null);
+  const goodbyeReasonRef = useRef<EndReason>('goodbye');
+
   const conv = useConversation({
     onConnect: ({ conversationId: cid }: { conversationId?: string }) => {
       if (cid) setConversationId(cid);
@@ -107,6 +113,21 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
         }
         return s;
       });
+      // When goodbye is pending, watch for agent speaking → listening transition.
+      // That signals the agent has finished its farewell response.
+      if (goodbyePendingRef.current) {
+        if (mode === 'speaking') {
+          goodbyeSeenSpeakingRef.current = true;
+        } else if (mode === 'listening' && goodbyeSeenSpeakingRef.current) {
+          goodbyeSeenSpeakingRef.current = false;
+          goodbyePendingRef.current = false;
+          if (goodbyeTimeoutRef.current) {
+            window.clearTimeout(goodbyeTimeoutRef.current);
+            goodbyeTimeoutRef.current = null;
+          }
+          queueMicrotask(() => endSessionRef.current?.(goodbyeReasonRef.current));
+        }
+      }
     },
   });
 
@@ -151,6 +172,30 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
     [conversationId, conv],
   );
   endSessionRef.current = endSession;
+
+  // Sends the goodbye prompt and closes when the agent finishes responding.
+  // Falls back to closing after 15s if the agent never speaks.
+  const signalGoodbye = useCallback(
+    (reason: EndReason, lang: Lang) => {
+      if (goodbyePendingRef.current) return; // already in progress
+      goodbyePendingRef.current = true;
+      goodbyeSeenSpeakingRef.current = false;
+      goodbyeReasonRef.current = reason;
+      conv.sendUserMessage(
+        lang === 'de'
+          ? '[system: Session endet jetzt — bitte verabschiede dich]'
+          : '[system: session ending now — please say goodbye]',
+      );
+      if (goodbyeTimeoutRef.current) window.clearTimeout(goodbyeTimeoutRef.current);
+      goodbyeTimeoutRef.current = window.setTimeout(() => {
+        goodbyePendingRef.current = false;
+        goodbyeSeenSpeakingRef.current = false;
+        goodbyeTimeoutRef.current = null;
+        endSessionRef.current?.(reason);
+      }, 15_000);
+    },
+    [conv],
+  );
 
   // ---- Amplitude polling via RAF (only while connected) ----
   useEffect(() => {
@@ -237,6 +282,7 @@ export function useElevenLabsConversation({ agentId, uiLang }: Options) {
     outputAmplitude,
     start,
     endSession,
+    signalGoodbye,
     sendContextualUpdate: conv.sendContextualUpdate,
     sendUserMessage: conv.sendUserMessage,
   };

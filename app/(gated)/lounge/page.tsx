@@ -49,24 +49,15 @@ function LoungeInner() {
     (conv.state.name === 'active' || conv.state.name === 'warning') &&
     conv.state.sub === 'speaking';
 
-  async function sendGoodbyeAndWait() {
-    if (isActive) {
-      conv.sendUserMessage(
-        lang === 'de'
-          ? '[system: Session endet jetzt — bitte verabschiede dich]'
-          : '[system: session ending now — please say goodbye]',
-      );
-      await new Promise<void>((r) => setTimeout(r, 8000));
-    }
-  }
-
+  // Close session after 15s in inactivity-prompt — the hook's interval stops
+  // when the state leaves active/warning, so this handles the remaining window.
   const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (conv.state.name === 'inactivity-prompt') {
       if (!inactivityTimerRef.current) {
-        inactivityTimerRef.current = setTimeout(async () => {
-          try { await conv.endSession('inactivity'); } catch {}
-        }, 15000);
+        inactivityTimerRef.current = setTimeout(() => {
+          void conv.endSession('inactivity');
+        }, 15_000);
       }
     } else {
       if (inactivityTimerRef.current) {
@@ -74,20 +65,7 @@ function LoungeInner() {
         inactivityTimerRef.current = null;
       }
     }
-  }, [conv.state.name]);
-
-  const goodbyeClosingRef = useRef(false);
-  useEffect(() => {
-    if (!isActive || goodbyeClosingRef.current) return;
-    const lastTurn = conv.turns[conv.turns.length - 1];
-    if (lastTurn?.role === 'agent' && lastTurn.message.includes('jonathan@plettenberg.org')) {
-      goodbyeClosingRef.current = true;
-      const t = setTimeout(async () => {
-        try { await conv.endSession('goodbye'); } catch {}
-      }, 3000);
-      return () => clearTimeout(t);
-    }
-  }, [conv.turns, isActive]);
+  }, [conv.state.name, conv.endSession]);
 
   const wordmarkGuard = isActive
     ? (proceed: () => void) => {
@@ -109,11 +87,7 @@ function LoungeInner() {
       );
     },
     onGoodbye: () => {
-      conv.sendUserMessage(
-        lang === 'de'
-          ? '[system: Session endet jetzt — bitte verabschiede dich]'
-          : '[system: session ending now — please say goodbye]',
-      );
+      conv.signalGoodbye('timeout', lang);
     },
     onHardLimit: () => {
       void conv.endSession('timeout');
@@ -189,10 +163,7 @@ function LoungeInner() {
           <SessionHeader
             remainingFormatted={timer.remainingFormatted}
             isWarning={timer.phase === 'warning' || timer.phase === 'hardLimit'}
-            onEnd={async () => {
-              await sendGoodbyeAndWait();
-              try { await conv.endSession('manual'); } catch {}
-            }}
+            onEnd={() => { conv.signalGoodbye('manual', lang); }}
           />
           <div className="flex flex-1 flex-col items-center gap-6 overflow-y-auto px-6 py-6 min-h-0 md:px-10">
             <VoiceIndicator state={indicatorState} amplitude={amplitude} />
@@ -212,10 +183,9 @@ function LoungeInner() {
               {t('confirm.end_session_no')}
             </Button>
             <Button
-              onClick={async () => {
+              onClick={() => {
                 setConfirmOpen(false);
-                await sendGoodbyeAndWait();
-                try { await conv.endSession('manual'); } catch {}
+                conv.signalGoodbye('manual', lang);
                 pendingNav?.();
                 setPendingNav(null);
               }}
